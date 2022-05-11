@@ -2,9 +2,11 @@ package jpabook.jpashop.domain;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "Orders")
+@Table(name = "orders")
 public class Order {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +21,13 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+
+    @OneToMany(mappedBy = "order")
+    private List<OrderItem> orderItems = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "delivery_id")
+    private Delivery delivery;
 
     public Long getId() {
         return id;
