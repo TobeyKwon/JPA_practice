@@ -5,23 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Team {
+public class Product {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "team_id")
     private Long id;
+
     private String name;
-
-    @OneToMany
-    @JoinColumn(name = "team_id")
-    private List<Member> members = new ArrayList<>();
-
-    public List<Member> getMembers() {
-        return members;
-    }
-
-    public void setMembers(List<Member> members) {
-        this.members = members;
-    }
 
     public Long getId() {
         return id;

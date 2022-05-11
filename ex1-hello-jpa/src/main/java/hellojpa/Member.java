@@ -3,21 +3,28 @@ package hellojpa;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "member")
 public class Member {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")
     private String userName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    private Team team;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "locker_id")
+    private Locker locker;
+
+    @OneToMany
+    private List<MemberProduct> memberProducts = new ArrayList<>();
+
     public Member() {
     }
 
@@ -35,18 +42,5 @@ public class Member {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
-    public void changeTeam(Team team) {
-        this.team = team;
-        team.getMembers().add(this);
     }
 }
