@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "member")
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class Member {
     @JoinColumn(name = "locker_id")
     private Locker locker;
 
-    @OneToMany
+    @OneToMany(mappedBy = "member")
     private List<MemberProduct> memberProducts = new ArrayList<>();
 
     public Member() {
