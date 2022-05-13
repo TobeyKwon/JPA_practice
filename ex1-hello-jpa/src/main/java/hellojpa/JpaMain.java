@@ -14,22 +14,18 @@ public class JpaMain {
         tx.begin();
 
         try {
-            // 비영속
-            Member member = new Member();
-            member.setUserName("권도현");
-            em.persist(member);
+            Parent parent = new Parent();
 
-            Team team = new Team();
-            team.setName("team1");
-            team.getMembers().add(member);
-            em.persist(team);
+            Child child1 = new Child();
+            Child child2 = new Child();
+
+            parent.addChild(child1);
+            parent.addChild(child2);
+
+            em.persist(parent);
 
             em.flush();
             em.clear();
-
-            Member member1 = em.find(Member.class, member.getId());
-
-            System.out.println("member1 = " + member1);
 
             tx.commit();
         } catch (Exception e) {
