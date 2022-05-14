@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.Objects;
 
 public class JpaMain {
 
@@ -14,15 +15,14 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Parent parent = new Parent();
+            Address address = new Address("city", "street", "10000");
 
-            Child child1 = new Child();
-            Child child2 = new Child();
+            Member member = new Member();
+            member.setUserName("member1");
+            member.setAddress(address);
+            member.getAddressHistory().add(new Address("city", "street", "10000"));
+            em.persist(member);
 
-            parent.addChild(child1);
-            parent.addChild(child2);
-
-            em.persist(parent);
 
             em.flush();
             em.clear();

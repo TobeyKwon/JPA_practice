@@ -3,9 +3,7 @@ package hellojpa;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "member")
@@ -13,24 +11,26 @@ public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member")
     private Long id;
 
     @Column(name = "name")
     private String userName;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "locker_id")
-    private Locker locker;
+    @Embedded
+    private Address address;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    private Team team;
+    @ElementCollection
+    @CollectionTable(name = "favorite_food", joinColumns =
+        @JoinColumn(name = "member_id"))
+    @Column(name = "food_name")
+    private Set<String> favoriteFoods = new HashSet<>();
 
-    @OneToMany(mappedBy = "member")
-    private List<MemberProduct> memberProducts = new ArrayList<>();
-
-    public Member() {
-    }
+    @ElementCollection
+    @CollectionTable(name = "address", joinColumns =
+        @JoinColumn(name = "member_id"))
+    @Column
+    private List<Address> addressHistory = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -48,11 +48,27 @@ public class Member extends BaseEntity {
         this.userName = userName;
     }
 
-    public Team getTeam() {
-        return team;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public Set<String> getFavoriteFoods() {
+        return favoriteFoods;
+    }
+
+    public void setFavoriteFoods(Set<String> favoriteFoods) {
+        this.favoriteFoods = favoriteFoods;
+    }
+
+    public List<Address> getAddressHistory() {
+        return addressHistory;
+    }
+
+    public void setAddressHistory(List<Address> addressHistory) {
+        this.addressHistory = addressHistory;
     }
 }
