@@ -1,27 +1,18 @@
-package jpabook.jpashop.domain;
+package jpql;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "member")
-public class Member extends BaseEntity {
+public class Team {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_Id")
     private Long id;
-
     private String name;
 
-    @Embedded
-    private Address address;
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
+    @OneToMany(mappedBy = "team")
+    private List<Member> members = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -39,4 +30,7 @@ public class Member extends BaseEntity {
         this.name = name;
     }
 
+    public List<Member> getMembers() {
+        return members;
+    }
 }
