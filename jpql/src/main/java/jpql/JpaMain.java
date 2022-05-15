@@ -12,23 +12,22 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try {
+            Member member1 = new Member();
+            member1.setName("member1");
+            member1.setAge(20);
+            em.persist(member1);
 
-            for(int i = 0; i < 100; i++) {
-                Member member = new Member();
-                member.setName("member1");
-                member.setAge(i);
-                em.persist(member);
-            }
-            int page = 1;
-            List<Member> resultList = em.createQuery("select m from Member m", Member.class)
-                    .setFirstResult((page - 1) * 10)
-                    .setMaxResults(10)
-                    .getResultList();
-            System.out.println("============ page1 ===============");
-            for (Member member : resultList) {
-                System.out.println("member = " + member);
-            }
+            Member member2 = new Member();
+            member2.setName("member2");
+            member2.setAge(20);
+            em.persist(member2);
 
+            int resultCount = em.createQuery("update Member m set m.age = 10").executeUpdate();
+            em.clear();
+
+            System.out.println("resultCount = " + resultCount);
+
+            tx.commit();
         } catch (Exception e) {
             tx.rollback();
             e.printStackTrace();
