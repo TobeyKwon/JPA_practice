@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
     List<Member> findByUsernameAndAgeGreaterThan(String username, int age);
 
     @Query(name = "Member.findByUsername")
@@ -47,9 +47,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select m from Member m join fetch m.team")
     List<Member> findMemberFetchJoin();
 
-    @Override
-    @EntityGraph(attributePaths = {"team"})
-    List<Member> findAll();
+//    @Override
+//    @EntityGraph(attributePaths = {"team"})
+//    List<Member> findAll();
 
     @EntityGraph(attributePaths = {"team"})
     @Query("select m from Member m")

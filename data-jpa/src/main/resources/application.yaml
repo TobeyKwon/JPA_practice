@@ -15,6 +15,11 @@ spring:
         default_batch_fetch_size: 500
     database: mysql
 
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+        max-page-size: 200
 logging:
   level:
     org.hibernate.SQL: debug

@@ -247,7 +247,10 @@ public class MemberRepositoryTest {
         findMember.setUsername("member2");
 
         em.flush();
+    }
 
-
+    @Test
+    public void callCustom() throws Exception {
+        List<Member> memberCustom = memberRepository.findMemberCustom();
     }
 }
