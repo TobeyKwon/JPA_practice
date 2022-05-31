@@ -4,10 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
@@ -252,5 +249,96 @@ public class MemberRepositoryTest {
     @Test
     public void callCustom() throws Exception {
         List<Member> memberCustom = memberRepository.findMemberCustom();
+    }
+
+//    @Test
+//    public void specBasic() {
+//        //given
+//        Team teamA = new Team("teamA");
+//        em.persist(teamA);
+//
+//        Member m1 = new Member("m1", 0, teamA);
+//        Member m2 = new Member("m2", 0, teamA);
+//        em.persist(m1);
+//        em.persist(m2);
+//
+//        em.flush();
+//        em.clear();
+//
+//        //when
+//        memberRepository.findAll()
+//    }
+
+    @Test
+    public void queryByExample() {
+        //given
+        Team teamA = new Team("teamA");
+        em.persist(teamA);
+
+        Member m1 = new Member("m1", 0, teamA);
+        Member m2 = new Member("m2", 0, teamA);
+        em.persist(m1);
+        em.persist(m2);
+
+        //when
+        //Probe
+        Member member = new Member("m1");
+        Team team = new Team("teamA");
+        member.setTeam(team);
+
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withIgnorePaths("age");
+        Example<Member> example = Example.of(member, matcher);
+
+        List<Member> result = memberRepository.findAll(example);
+
+        assertEquals("m1", result.get(0).getUsername());
+
+    }
+
+    @Test
+    public void projections() throws Exception {
+        //given
+        Team teamA = new Team("teamA");
+        em.persist(teamA);
+
+        Member m1 = new Member("m1", 12, teamA);
+        Member m2 = new Member("m2", 15, teamA);
+
+        em.persist(m1);
+        em.persist(m2);
+
+        em.flush();
+        em.clear();
+
+        List<UsernameOnly> result = memberRepository.findProjectionsByUsername("m1");
+        for (UsernameOnly usernameOnly : result) {
+            System.out.println("usernameOnly = " + usernameOnly.getUsername());
+        }
+    }
+    
+    @Test
+    public void MemberRepositoryTest() throws Exception {
+        //given
+        Team teamA = new Team("teamA");
+        em.persist(teamA);
+
+        Member m1 = new Member("m1", 12, teamA);
+        Member m2 = new Member("m2", 15, teamA);
+
+        em.persist(m1);
+        em.persist(m2);
+
+        em.flush();
+        em.clear();
+
+//        //when
+//        Page<MemberProjection> result = memberRepository.findByNativeProjection(PageRequest.of(0, 10));
+//        List<MemberProjection> content = result.getContent();
+//        for (MemberProjection memberProjection : content) {
+//            System.out.println("memberProjection.getUsername() = " + memberProjection.getUsername());
+//            System.out.println("memberProjection.getTeamName() = " + memberProjection.getTeamName());
+//            System.out.println("memberProjection.getId() = " + memberProjection.getId());
+//        }
     }
 }
