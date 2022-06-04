@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: test
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/jpastudy?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&useSSL=false&MVCC=TRUE
