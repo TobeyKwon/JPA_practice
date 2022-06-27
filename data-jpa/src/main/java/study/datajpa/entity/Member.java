@@ -24,14 +24,14 @@ public class Member {
         this.username = username;
     }
 
+    public Member(String username, int age) {
+        this.username = username;
+        this.age = age;
+    }
+
     public Member(String username, int age, Team team) {
         this.username = username;
         this.age = age;
-
-//        if(team != null) {
-//            throw new IllegalArgumentException("team이 null입니다.");
-//        }
-
         changeTeam(team);
     }
 
