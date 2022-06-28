@@ -11,7 +11,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
+import study.datajpa.entity.Team;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,9 +27,13 @@ public class  MemberRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    TeamRepository teamRepository;
+    @PersistenceContext
+    EntityManager em;
 
     @Test
-    public void MemberJpaRepositoryTest() throws Exception {
+    public void MemberRepositoryTest() throws Exception {
         //given
         Member member = new Member("memberA");
         //when
@@ -105,5 +112,69 @@ public class  MemberRepositoryTest {
 //        assertEquals(0, page.getNumber());
 
         System.out.println("memberDtos.getTotalElements() = " + memberDtos.getTotalElements());
+    }
+
+    @Test
+    public void bulkUpdate() throws Exception {
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 19));
+        memberRepository.save(new Member("member3", 20));
+        memberRepository.save(new Member("member4", 21));
+        memberRepository.save(new Member("member5", 40));
+
+        int resultCount = memberRepository.bulkAgePlus(20);
+
+        List<Member> members = memberRepository.findByUsername("member5");
+        Member members5 = members.get(0);
+        System.out.println("members5 = " + members5);
+
+        assertEquals(3, resultCount);
+    }
+
+    @Test
+    public void findMemberLazy() throws Exception {
+        //given
+        //member1 -> teamA
+        //member2 -> teamB
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
+
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 10, teamB);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+
+        //when
+        List<Member> members = memberRepository.findAll();
+
+        for (Member member : members) {
+            System.out.println("member = " + member);
+            System.out.println("member.getTeam().getName() = " + member.getTeam().getName());
+        }
+
+    }
+
+    @Test
+    public void queryHint() throws Exception {
+        Member member1 = new Member("member1", 10);
+        memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        Member member = memberRepository.findReadOnlyByUsername(member1.getUsername()).get();
+        member.setUsername("member2");
+
+        em.flush();
+        em.clear();
+    }
+
+    @Test
+    public void callCustom() throws Exception {
+        List<Member> memberCustom = memberRepository.findMemberCustom();
     }
 }
