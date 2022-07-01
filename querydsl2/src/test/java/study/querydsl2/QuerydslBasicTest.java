@@ -14,9 +14,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import study.dto.MemberDto;
-import study.dto.QMemberDto;
-import study.dto.UserDto;
+import study.querydsl2.dto.MemberDto;
+import study.querydsl2.dto.QMemberDto;
+import study.querydsl2.dto.UserDto;
 import study.querydsl2.entity.Member;
 import study.querydsl2.entity.QMember;
 import study.querydsl2.entity.Team;
@@ -475,7 +475,7 @@ public class QuerydslBasicTest {
 
     @Test
     public void findDtoByJPQL() throws Exception {
-        List<MemberDto> result = em.createQuery("select new study.dto.MemberDto(m.username, m.age) from Member m", MemberDto.class)
+        List<MemberDto> result = em.createQuery("select new study.querydsl2.dto.MemberDto(m.username, m.age) from Member m", MemberDto.class)
                 .getResultList();
 
         for (MemberDto memberDto : result) {
